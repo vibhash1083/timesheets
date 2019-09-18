@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+table,tr, th, td{
+  border: 1px solid black;
+}
+
+</style>
+
+</head>
+<body>
+<div>
+    <table>
+        <thead>
+        <tr style="text-align:center width: 75%;"><th>Role</th><th>Team Member</th><th>Team Name</th><th>Category</th><th>Jira Ticket-type</th><th>Jira Ticket-number</th><th>Description</th><th>Sprint</th><th>Hours</th><th>Date</th></tr>
+        </thead></br>
+        <tbody>
+        {% for t in list %}
+        <tr style="text-align:center">
+            <td>{{t.role.role_name}}</td>
+            <td>{{t.team_name.mem_name}}</td>
+            <td>{{t.team_name.team_name}}</td>
+            <td>{{t.category.category}}</td>
+            <td>{{t.jira_ticket_type}}</td>
+            <td>{{t.jira_ticket_number}}</td>
+            <td>{{t.description}}</td>
+            <td>{{t.sprint}}</td>
+            <td>{{t.hours}}</td>
+            <td>{{t.date}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
