@@ -7,6 +7,7 @@ class ExcelPageView(TemplateView):
 
 
 import xlwt
+import xlrd
 from django.http import HttpResponse
 from core.models import Task, Role, Member, Category
 
@@ -17,29 +18,57 @@ def export_xls(request):
 
     wb = xlwt.Workbook(encoding='utf-8')
     sheets = Role.objects.all()
-
+    mylist =[]
     for sheet in sheets:
-        ws = wb.add_sheet(sheet.role_name)
+        mylist.append(sheet.role_name)
+    mysheets=list(dict.fromkeys(mylist))
+    # print(mysheets)
+    # style = xlwt.XFStyle()
+    # pattern = xlwt.Pattern()
+    # pattern.pattern = xlwt.Pattern.SOLID_PATTERN
+    # pattern.pattern_fore_colour = xlwt.Style.colour_map['dark_purple']
+    # style.pattern = pattern
+
+    # fmt = xlwt.Style.easyxf("""
+    #     font: name Arial;
+    #     borders: left thick, right thick, top thick, bottom thick;
+    #     pattern: pattern solid, fore_colour red;
+    #     """, num_format_str='YYYY-MM-DD')
+
+    for sheet in mysheets:
+
+        ws = wb.add_sheet(sheet)
         row_num = 0
+        # fmt = xlwt.Style.easyxf("""
+        #     font: name Calibri;
+        #     borders: left thick, right thick, top thick, bottom thick;
+        #     pattern: pattern solid, fore_colour black;
+        #     height :
+        #     """, num_format_str='YYYY-MM-DD')
+        font_style1 = xlwt.Style.easyxf('font: name Calibri, bold on, height 180,color black; pattern: pattern solid, fore_colour yellow; border: top_color black, bottom_color black, right_color black, left_color black ;')
 
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
+        # font_style = xlwt.XFStyle()
+        # font_style.font.bold = True
 
-        columns = ['Jira Ticket', 'Description', 'Sprints/Releases', 'Team Member', 'Category', 'Hours', 'Week', ]
+        columns = ['Jira Ticket Type', 'Description', 'Sprints/Releases', 'Team Member', 'Category', 'Hours', 'Week', ]
 
         for col_num in range(len(columns)):
-            ws.write(row_num, col_num, columns[col_num], font_style)
+            ws.write(row_num, col_num, columns[col_num], font_style1)
 
-        font_style = xlwt.XFStyle()
+        # font_style = xlwt.XFStyle()
+            font_style2 = xlwt.Style.easyxf('font: name Calibri, height 180; border: top_color black, bottom_color black, right_color black, left_color black;')
 
     for sheet in sheets:
-        row_num = 0
+        # row_num = 0
+
         ws = wb.get_sheet(sheet.role_name)
-        rows = Task.objects.filter(role=sheet).values_list('jira_ticket', 'description', 'sprint', 'team_member','category','hours','week')
+        row_num=len(ws._Worksheet__rows)
+        print(row_num)
+        rows = Task.objects.filter(role=sheet).values_list('jira_ticket_type', 'description', 'sprint', 'team_name','category','hours','date')
         for row in rows:
-            row_num += 1
+            # row_num += 1
             for col_num in range(len(row)):
-                ws.write(row_num, col_num, row[col_num], font_style)
+                ws.write(row_num, col_num, row[col_num], font_style2)
 
     wb.save(response)
 
