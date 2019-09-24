@@ -63,7 +63,8 @@ def export_xls(request):
 
         ws = wb.get_sheet(sheet.role_name)
         row_num=len(ws._Worksheet__rows)
-        print(row_num)
+        # print(row_num)
+
         rows = Task.objects.filter(role=sheet).values_list('jira_ticket_type', 'description', 'sprint', 'team_name','category','hours','date')
         for row in rows:
             # row_num += 1
@@ -82,12 +83,12 @@ def get_current_week(campaign_date):
 
 
 def createpost(request):
-
+    count=0
     role = Role()
     cat = Category()
     mem = Member()
     task = Task()
-
+    check=Task.objects.all()
     role.role_name = request.POST.get('role_name')
     mem.mem_name = request.POST.get('mem_name')
     mem.team_name = request.POST.get('team_name')
@@ -104,7 +105,15 @@ def createpost(request):
     task.category = cat
     task.team_name = mem
     task.role = role
-    task.save()
+    print(len(check))
+    for x in range(len(check)):
+        print(x)
+        if(check == task):
+            count=1
+
+    if(count==0):
+        print("saved")
+        task.save()
 
     messages.success(request, 'Details submitted')
 
@@ -112,7 +121,7 @@ def createpost(request):
                   {'t': task })
 
 def details(request):
-    query = Task.objects.all()
+    query = Task.objects.values_list('description',flat=True).distinct()
     return render(request, 'details.html', {'list':query})
 
 def invoke(request):

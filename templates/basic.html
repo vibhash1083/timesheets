@@ -69,9 +69,9 @@
                 <div class="col-10">
                 <select type="text" name="category" class="vTextField"  required="" id="id_category" onchange="javascript: pto(this.options[this.selectedIndex].value);">
                     <option value=" "> </option>
-                    <option value="story">Story</option>
-                    <option value="bug">Bug</option>
-                    <option value="pto" >PTO</option>
+                    <option value="Story">Story</option>
+                    <option value="Bug">Bug</option>
+                    <option value="PTO" >PTO</option>
                 </select>
             </div>
             </div>
@@ -186,7 +186,14 @@ window.onload = function() {
 
 function pto(val){
     if(val == "PTO")
-        document.getElementById("id_description").value = "PTO";
+    {
+        console.log("hello");
+        document.getElementById("id_description").setAttribute("value","PTO");
+     }
+        else
+        {
+        document.getElementById("id_description").setAttribute("value","");
+        }
 }
 
 
