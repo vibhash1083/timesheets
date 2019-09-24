@@ -1,6 +1,8 @@
 {% load static %}
 <html lang="en-us">
+
 <head>
+    <title>Timesheet</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
@@ -10,18 +12,17 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
 </head>
-<body class=" app-core model-field change-form" >
- <p class="font-weight-bold h1" style="text-align:center; color:#4D2994; font-size: 350%;">TimeSheet</p>
+
+<body class=" app-core model-field change-form">
+    <p class="font-weight-bold h1" style="text-align:center; color:#4D2994; font-size: 350%;">TimeSheet</p>
     <div id="content-main" style="color:#4D2994" class="container-fluid">
-    <form  class="form-horizontal" action="{% url 'save' %}"method="post">
-        {% csrf_token %}
-        {{task_form.as_p}}
-        <fieldset class="module aligned ">
-            <!--<div class="form-row field-role">-->
+        <form class="form-horizontal" action="{% url 'save' %}" method="post">
+            {% csrf_token %} {{task_form.as_p}}
+            <fieldset class="module aligned ">
                 <div class="row">
                     <div class="col-2">
-                    <label  for="id_role">Role:</label>
-                        </div>
+                        <label for="id_role">Role:</label>
+                    </div>
                     <div class="col-10">
                         <select name="role_name" required="" id="id_role" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
                             <option value="QA" selected >QA</option>
@@ -30,31 +31,28 @@
                         </select>
                     </div>
                 </div>
-            <!--</div>-->
-            <!--<div class="form-row field-team_member">-->
                 <div class="row">
                     <div class="col-2">
-                    <label >Team member:</label>
-                        </div>
+                        <label>Team member:</label>
+                    </div>
                     <div class="col-10">
-                    <script type="text/javascript" language="JavaScript">
-                        document.write('<select name="mem_name" id="status"><option value="">--Select--</option></select>')
+                        <script type="text/javascript" language="JavaScript">
+                            document.write('<select name="mem_name" id="status"><option value="">--Select--</option></select>')
                         </script>
                         <noscript>
                             <div class="col-sm-10">
                                 <select id="mem_name" name="mem_name"></select>
                                 </div>
                         </noscript>
-                        </div>
-                </div>
-            <!--</div>-->
-             <div class="row">
-                <div class="col-2">
-                    <label class="required">Team Name:</label>
                     </div>
-                 <div class="col-10">
-                    <script type="text/javascript" language="JavaScript">
-                        document.write('<select name="team_name" id="status"><option value="iceman">iceman</option></select>')
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required">Team Name:</label>
+                    </div>
+                    <div class="col-10">
+                        <script type="text/javascript" language="JavaScript">
+                            document.write('<select name="team_name" id="status"><option value="iceman">iceman</option></select>')
                         </script>
                         <noscript>
                             <select id="team_name" name="team_name"></select>
@@ -62,140 +60,135 @@
                     </div>
                 </div>
 
-            <div class="row">
-             <div class="col-2">
-                <label class="required" for="id_category">Category:</label>
-            </div>
-                <div class="col-10">
-                <select type="text" name="category" class="vTextField"  required="" id="id_category" onchange="javascript: pto(this.options[this.selectedIndex].value);">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required" for="id_category">Category:</label>
+                    </div>
+                    <div class="col-10">
+                        <select type="text" name="category" class="vTextField" required="" id="id_category" onchange="javascript: pto(this.options[this.selectedIndex].value);">
                     <option value=" "> </option>
                     <option value="Story">Story</option>
                     <option value="Bug">Bug</option>
                     <option value="PTO" >PTO</option>
                 </select>
-            </div>
-            </div>
+                    </div>
+                </div>
 
 
-            <div class="row">
-                <div class="col-2">
-                    <label class="required" for="id_jira_ticket_type">Jira ticket type:</label>
-                 </div>
-                <div class="col-10">
-                    <select name="jira_ticket_type" id="id_jira_ticket_type">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required" for="id_jira_ticket_type">Jira ticket type:</label>
+                    </div>
+                    <div class="col-10">
+                        <select name="jira_ticket_type" id="id_jira_ticket_type">
                         <option value=""> </option>
                         <option value="eng">ENG</option>
                         <option value="hd">HD</option>
                     </select>
 
-                </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-2">
-                    <label class="required" for="id_jira_ticket_number">Jira ticket number:</label></div>
+                        <label for="id_jira_ticket_number">Jira ticket number:</label></div>
                     <div class="col-10">
-                    <input type="number" name="jira_ticket_number" class="vIntegerField" maxlength="20" id="id_jira_ticket_number"></div>
+                        <input type="number" name="jira_ticket_number" value="0" class="vIntegerField" maxlength="20" id="id_jira_ticket_number"></div>
                 </div>
 
-            <div class="row">
-                <div class="col-2">
-                    <label class="required" for="id_description">Description:</label></div>
-                <div class="col-10">
-                    <input type="text" name="description" size="40" class="vTextField" maxlength="100" required="" id="id_description">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required" for="id_description">Description:</label></div>
+                    <div class="col-10">
+                        <input type="text" name="description" size="40" class="vTextField" maxlength="100" required="" id="id_description">
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-2">
-                    <label class="required" for="id_sprint">Sprint:</label></div>
-                <div class="col-10">
-                    <input type="text" name="sprint" class="vTextField" maxlength="20" required="" id="id_sprint">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required" for="id_sprint">Sprint:</label></div>
+                    <div class="col-10">
+                        <input type="text" name="sprint" class="vTextField" maxlength="20" required="" id="id_sprint">
+                    </div>
                 </div>
-            </div>
 
-        <div class="row">
-            <div class="col-2">
-                <label class="required" for="id_hours">Hours:</label></div>
-            <div class="col-10">
-                <input type="number" name="hours" class="vIntegerField" required="" id="id_hours" value="8">
-            </div>
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required" for="id_hours">Hours:</label></div>
+                    <div class="col-10">
+                        <input type="number" name="hours" class="vIntegerField" required="" id="id_hours" value="8">
+                    </div>
 
-        </div>
+                </div>
 
-        <div class="row">
-            <div class="col-2">
-                <label class="required">Date</label></div>
-            <div class="col-10">
-                 <input type="date" name="date" id="date">
-            </div>
-        </div>
-        </fieldset>
+                <div class="row">
+                    <div class="col-2">
+                        <label class="required">Date</label></div>
+                    <div class="col-10">
+                        <input type="date" name="date" id="date">
+                    </div>
+                </div>
+            </fieldset>
 
-        <input type="submit" value="Save" class="default" name="_save">
-    </form>
+            <input type="submit" value="Save" class="default" name="_save">
+        </form>
 
- </div>
+    </div>
 </body>
-  <script>
-    function dynamicdropdown(listindex)
-    {
-        switch (listindex)
-        {
-        case "QA" :
-            document.getElementById("status").options[0]=new Option("--Select--","");
-            document.getElementById("status").options[1]=new Option("Archana","Archana");
-            document.getElementById("status").options[2]=new Option("Sridhar","Sridhar");
-            break;
-        case "Dev" :
-            document.getElementById("status").options[0]=new Option("--Select--","");
-            document.getElementById("status").options[1]=new Option("Vibhash","Vibhash");
-            document.getElementById("status").options[2]=new Option("Praveen","Praveen");
-            document.getElementById("status").options[3]=new Option("Rajesh","Rajesh");
-            break;
-        case "Support" :
-            document.getElementById("status").options[0]=new Option("--Select--","");
-            document.getElementById("status").options[1]=new Option("Dheeraj","Dheeraj");
-            document.getElementById("status").options[2]=new Option("Swetha","Swetha");
-            document.getElementById("status").options[3]=new Option("Srikanth","Srikanth");
-            break;
+<script>
+    function dynamicdropdown(listindex) {
+        switch (listindex) {
+            case "QA":
+                document.getElementById("status").options[0] = new Option("--Select--", "");
+                document.getElementById("status").options[1] = new Option("Archana", "Archana");
+                document.getElementById("status").options[2] = new Option("Sridhar", "Sridhar");
+
+                break;
+            case "Dev":
+                document.getElementById("status").options[0] = new Option("--Select--", "");
+                document.getElementById("status").options[1] = new Option("Vibhash", "Vibhash");
+                document.getElementById("status").options[2] = new Option("Praveen", "Praveen");
+                document.getElementById("status").options[3] = new Option("Rajesh", "Rajesh");
+                break;
+            case "Support":
+                document.getElementById("status").options[0] = new Option("--Select--", "");
+                document.getElementById("status").options[1] = new Option("Dheeraj", "Dheeraj");
+                document.getElementById("status").options[2] = new Option("Swetha", "Swetha");
+                document.getElementById("status").options[3] = new Option("Srikanth", "Srikanth");
+                break;
         }
         return true;
     }
 
-function getDate() {
-  var today = new Date();
-  var dd = today.getDate();
-  var mm = today.getMonth()+1; //January is 0!
-  var yyyy = today.getFullYear();
+    function getDate() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
 
-  if(dd<10) {
-      dd = '0'+dd
-  }
-
-  if(mm<10) {
-      mm = '0'+mm
-  }
-
-  today = yyyy + '-' + mm + '-' + dd;
-  console.log(today);
-  document.getElementById("date").value = today;
-}
-window.onload = function() {
-  getDate();
-  dynamicdropdown('QA');
-}
-
-function pto(val){
-    if(val == "PTO")
-    {
-        console.log("hello");
-        document.getElementById("id_description").setAttribute("value","PTO");
-     }
-        else
-        {
-        document.getElementById("id_description").setAttribute("value","");
+        if (dd < 10) {
+            dd = '0' + dd
         }
-}
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
 
 
+        today = yyyy + '-' + mm + '-' + dd;
+        console.log(today);
+        document.getElementById("date").value = today;
+    }
+    window.onload = function() {
+        getDate();
+        dynamicdropdown('QA');
+    }
+
+    function pto(val) {
+        if (val == "PTO")
+            document.getElementById("id_description").setAttribute("value", "PTO");
+        else
+            document.getElementById("id_description").setAttribute("value", "");
+
+    }
 </script>
+
 </html>
