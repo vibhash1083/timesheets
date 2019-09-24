@@ -21,7 +21,7 @@ class Category(models.Model):
 class Task(models.Model):
     role = models.ForeignKey(Role,on_delete=models.CASCADE)
     jira_ticket_type = models.CharField(max_length=20)
-    jira_ticket_number = models.IntegerField()
+    jira_ticket_number = models.IntegerField(null=True)
     description = models.CharField(max_length=100)
     sprint = models.CharField(max_length=20)
     team_name =models.ForeignKey(Member,on_delete=models.CASCADE)

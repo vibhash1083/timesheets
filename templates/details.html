@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Download Timesheets</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -18,7 +18,7 @@ table,tr, th, td{
 <div>
     <table>
         <thead>
-        <tr style="text-align:center width: 75%;"><th>Role</th><th>Team Member</th><th>Team Name</th><th>Category</th><th>Jira Ticket-type</th><th>Jira Ticket-number</th><th>Description</th><th>Sprint</th><th>Hours</th><th>Date</th></tr>
+        <tr style="text-align:center width:75%;"><th>Role</th><th>Team Member</th><th>Team Name</th><th>Category</th><th>Jira Ticket-type</th><th>Jira Ticket-number</th><th>Description</th><th>Sprint</th><th>Hours</th><th>Date</th></tr>
         </thead></br>
         <tbody>
         {% for t in list %}
@@ -39,7 +39,7 @@ table,tr, th, td{
     </table>
 </div>
 <div>
-    <a href="{% url 'export_excel' %}">Download Excel sheet</a>
+    <br><br><a href="{% url 'export_excel' %}">Download Excel sheet</a>
 </div>
 
 </body>
