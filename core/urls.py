@@ -21,7 +21,7 @@ urlpatterns = [
     path('view_report/', views.ReportView.as_view(), name='report_view'),
     path('generate_report/', views.GenerateReport.as_view(), name='generate_report_view'),
     path('fetch_report/', views.FetchReportView.as_view(), name='fetch_report_view'),
-    # path('data', views.details, name='data'),
+    path('export_excel/<date:start_date>', views.export_excel, name='export_excel_view'),
 
 
 ]

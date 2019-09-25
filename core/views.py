@@ -156,7 +156,9 @@ class FetchReportView(View):
         context_data = Worklog.objects.filter(work_date__gte = from_date, work_date__lte = to_date)
         return render(request,'fetch_report.html',{'context_data':context_data})
 
-
+def export_excel(request):
+    print("export excel")
+    pass
     # def get_context_data(request, self, **kwargs):
     #     context = super(ReportView, self).get_context_data(**kwargs)
     #     from_date= request.POST.get('from_date')
