@@ -24,10 +24,10 @@
                         <label for="id_role">Role:</label>
                     </div>
                     <div class="col-10">
-                        <select name="role_name" required="" id="id_role" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
-                            <option value="QA" selected >QA</option>
-                            <option value="Dev" >Dev</option>
-                            <option value="Support">Support</option>
+                        <select name="team" required="" id="id_role" onchange="javascript: dynamicdropdown(this.options[this.selectedIndex].value);">
+                            {% for t in team%}
+                            <option value="{{ t.team }}" selected >{{t.team}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -48,28 +48,13 @@
                 </div>
                 <div class="row">
                     <div class="col-2">
-                        <label class="required">Team Name:</label>
-                    </div>
-                    <div class="col-10">
-                        <script type="text/javascript" language="JavaScript">
-                            document.write('<select name="team_name" id="status"><option value="iceman">iceman</option></select>')
-                        </script>
-                        <noscript>
-                            <select id="team_name" name="team_name"></select>
-                        </noscript>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-2">
                         <label class="required" for="id_category">Category:</label>
                     </div>
                     <div class="col-10">
                         <select type="text" name="category" class="vTextField" required="" id="id_category" onchange="javascript: pto(this.options[this.selectedIndex].value);">
-                    <option value=" "> </option>
-                    <option value="Story">Story</option>
-                    <option value="Bug">Bug</option>
-                    <option value="PTO" >PTO</option>
+                            {% for cate in category %}
+                            <option value="{{cate.category}} ">{{cate.category}} </option>
+                            {% endfor %}
                 </select>
                     </div>
                 </div>
@@ -136,19 +121,25 @@
 <script>
     function dynamicdropdown(listindex) {
         switch (listindex) {
-            case "QA":
+            case "QA-MARINNE":
                 document.getElementById("status").options[0] = new Option("--Select--", "");
                 document.getElementById("status").options[1] = new Option("Archana", "Archana");
                 document.getElementById("status").options[2] = new Option("Sridhar", "Sridhar");
 
                 break;
-            case "Dev":
+            case "QA-JASON":
+                document.getElementById("status").options[0] = new Option("--Select--", "");
+                document.getElementById("status").options[1] = new Option("Vimala", "Vimala");
+                document.getElementById("status").options[2] = new Option("Prem", "Prem");
+
+                break;
+            case "DEV":
                 document.getElementById("status").options[0] = new Option("--Select--", "");
                 document.getElementById("status").options[1] = new Option("Vibhash", "Vibhash");
                 document.getElementById("status").options[2] = new Option("Praveen", "Praveen");
                 document.getElementById("status").options[3] = new Option("Rajesh", "Rajesh");
                 break;
-            case "Support":
+            case "SMILE-CHECK-Support":
                 document.getElementById("status").options[0] = new Option("--Select--", "");
                 document.getElementById("status").options[1] = new Option("Dheeraj", "Dheeraj");
                 document.getElementById("status").options[2] = new Option("Swetha", "Swetha");

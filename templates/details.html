@@ -23,9 +23,8 @@ table,tr, th, td{
         <tbody>
         {% for t in list %}
         <tr style="text-align:center">
-            <td>{{t.role.role_name}}</td>
-            <td>{{t.team_name.mem_name}}</td>
-            <td>{{t.team_name.team_name}}</td>
+            <td>{{t.team.team_name}}</td>
+            <td>{{t.team.mem_name}}</td>
             <td>{{t.category.category}}</td>
             <td>{{t.jira_ticket_type}}</td>
             <td>{{t.jira_ticket_number}}</td>

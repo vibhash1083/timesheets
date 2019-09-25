@@ -1,0 +1,36 @@
+<!--<app>/templates/contact-us.html-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Work Entry</title>
+    <style>
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button1 {font-size: 10px;}
+
+</style>
+</head>
+
+<body>
+    <form action="." method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">SUBMIT</button>
+    </form>
+    <br><br>
+    <a href="/generate_report/">Report View</a>
+
+</body>
+
+</html>

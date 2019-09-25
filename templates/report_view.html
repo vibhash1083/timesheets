@@ -1,0 +1,71 @@
+<!--<app>/templates/contact-us.html-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Report</title>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+      #heading{
+                background-color : blue;
+                text-align : center;
+      }
+      table,tr, th, td{
+                 border: 1px solid black;
+                 text-align : center;
+            }
+            .button {
+                      background-color: #4CAF50; /* Green */
+                      border: none;
+                      color: white;
+                      padding: 15px 32px;
+                      text-align: center;
+                      text-decoration: none;
+                      display: inline-block;
+                      margin: 4px 2px;
+                      cursor: pointer;
+                    }
+
+            .button1 {font-size: 10px;}
+    </style>
+</head>
+
+<body>
+ <div id="heading"><h2>Report</h2></div>
+ <div class="container">
+     <table class="table table-bordered">
+         <tr>
+                <th>Team</th>
+                <th>Jira Ticket Type</th>
+                <th>Jira Ticket Number</th>
+                <th>Description</th>
+                <th>Sprint</th>
+                <th>Team Member</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Hours</th>
+         </tr>
+         {% for data in context_data %}
+         <tr>
+                <td>{{data.member.group_name.group_name}}</td>
+                <td>{{data.task.jira_ticket_type}}</td>
+                <td>{{data.task.jira_ticket_number}}</td>
+                <td>{{data.task.description}}</td>
+                <td>{{data.task.sprint}}</td>
+                <td>{{data.member.name}}</td>
+                <td>{{data.task.category.category_name}}</td>
+                <td>{{data.work_date}}</td>
+                <td>{{data.hours}}</td>
+         </tr>
+         {% endfor %}
+     </table>
+     </div><br><br>
+
+     <div>
+             <a href="/"> Home </a>
+     </div>
+</body>
+
+
+</html>
+
