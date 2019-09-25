@@ -1,33 +1,24 @@
-<!--<app>/templates/contact-us.html-->
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-8">
+   <div class="card shadow mb-8">
+      <div class="card-header py-7">
+         <h6 class="m-0 font-weight-bold text-primary">Worklog</h6>
+      </div>
+      <div class="card-body">
+         <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+               {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+         </form>
+      </div>
+   </div>
+</div>
 
-<head>
-    <title>Work Entry</title>
-    <style>
-.button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  margin: 4px 2px;
-  cursor: pointer;
-}
+<script type="text/javascript">
 
-.button1 {font-size: 10px;}
-
-</style>
-</head>
-
-<body>
-    <form action="." method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">SUBMIT</button>
-    </form>
-</body>
-
-</html>
+</script>
+{% endblock %}
