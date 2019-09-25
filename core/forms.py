@@ -40,3 +40,8 @@ class WorklogForm(forms.Form):
                                 hours = worked_hours)
 
         worklog_entry.save()
+
+
+class ReportForm(forms.Form):
+    start_date = forms.DateField(label='Date', widget=forms.SelectDateWidget)
+    end_date = forms.DateField(label='Date', widget=forms.SelectDateWidget)
