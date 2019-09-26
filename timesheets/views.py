@@ -23,7 +23,13 @@ class ReportView(View):
 
     def get(self, request, *args, **kwargs):
         worklog_data = Worklog.objects.all()
-        form = ReportForm()
+        start_date = datetime.date(2019, 1, 1)
+        end_date = datetime.date(2022, 12, 31)
+        form_data = {
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        form = ReportForm(form_data)
         context = {}
         context['worklog_data'] = worklog_data
         context['form'] = form

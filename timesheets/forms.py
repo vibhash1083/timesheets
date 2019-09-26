@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.admin.widgets import AdminDateWidget
 
 from .models import *
 
@@ -11,8 +12,8 @@ class WorklogForm(forms.Form):
     ticket_number = forms.IntegerField()
     ticket_description = forms.CharField()
     sprint = forms.CharField(required=False)
-    worked_date = forms.DateField(label='Date', widget=forms.SelectDateWidget)
-    hours_worked = forms.IntegerField(label='Hours Worked')
+    worked_date = forms.DateField(label='Date', widget=AdminDateWidget(), initial=datetime.date.today)
+    hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
 
     def save(self):
         task_category = self.cleaned_data.get('task_category')

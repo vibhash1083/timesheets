@@ -1,13 +1,16 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load widget_tweaks %}
 {% block content %}
 <!-- Page Heading -->
+
 <div class="d-sm-8 align-items-center justify-content-between mb-4">
    <div class="card shadow mb-4">
       <div class="card-header py-3">
          <h6 class="m-0 font-weight-bold text-primary">Worklog</h6>
       </div>
       <div class="card-body">
+         {{ form.media }}
          <form method="post" action="" class="form-horizontal" id="form_sample_2" enctype="multipart/form-data">
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
