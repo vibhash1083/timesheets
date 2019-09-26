@@ -42,5 +42,5 @@ class WorklogForm(forms.Form):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(label='Date', widget=forms.SelectDateWidget)
-    end_date = forms.DateField(label='Date', widget=forms.SelectDateWidget)
+    start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
+    end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
