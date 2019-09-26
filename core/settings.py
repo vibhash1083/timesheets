@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
 
     # custom apps
-    'core',
+    'timesheets',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'TimeSheets.urls'
+ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
 
 
 
-WSGI_APPLICATION = 'TimeSheets.wsgi.application'
+WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
