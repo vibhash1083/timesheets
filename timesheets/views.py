@@ -1,12 +1,13 @@
 import datetime
 
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.views.generic.edit import FormView, View
-from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
-from django.shortcuts import render
 
 from .forms import WorklogForm, ReportForm
 from .models import Task, Worklog
+from .export_excel import generate_excel_report
 
 
 class HomeView(FormView):
@@ -39,14 +40,22 @@ class ReportView(View):
         form = ReportForm(request.POST, request.FILES)
         start_date = datetime.datetime.strptime(form.data.get('start_date'), '%Y-%m-%d').date()
         end_date = datetime.datetime.strptime(form.data.get('end_date'), '%Y-%m-%d').date()
-        worklog_data = Worklog.objects.filter(
-            work_date__gte=start_date, work_date__lte=end_date)
-        context = {}
-        context['worklog_data'] = worklog_data
-        context['form'] = form
-        return render(request, 'report.html', context)
+        if request.POST:
+            if '_submit' in request.POST:
+                worklog_data = Worklog.objects.filter(work_date__gte=start_date, work_date__lte=end_date)
+                context = {}
+                context['worklog_data'] = worklog_data
+                context['form'] = form
+                return render(request, 'report.html', context)
+            elif '_download' in request.POST:
+                response = HttpResponse(content_type='application/ms-excel')
+                response['Content-Disposition'] = 'attachment; filename="TimeSheet.xls"'
+                workbook = generate_excel_report(start_date, end_date)
+                workbook.save(response)
+                return response
+            elif '_add' in request.POST:
+                response = redirect('/')
+                return response
 
 
-def export_excel(request):
-    print("export excel")
-    pass
+
