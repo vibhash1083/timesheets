@@ -25,11 +25,13 @@ class Member(models.Model):
     def __str__(self):
         return self.name
 
+
 class TaskCategory(models.Model):
     category_name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.category_name
+
 
 class TicketType(models.Model):
     ticket_type = models.CharField(max_length=5)
@@ -46,11 +48,12 @@ class Task(models.Model):
     sprint = models.CharField(max_length=20, null=True, blank=True)
 
     def __str__(self):
-        return self.jira_ticket_type.ticket_type + '-' + str(self.jira_ticket_number)
+        return self.jira_ticket_type.ticket_type + \
+            '-' + str(self.jira_ticket_number)
 
 
 class Worklog(models.Model):
-    task = models.ForeignKey(Task,on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     work_date = models.DateField(default=datetime.date.today)
     hours = models.IntegerField(default=0)

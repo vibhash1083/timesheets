@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 
 from .forms import WorklogForm, ReportForm
-from .models import Task,Worklog
+from .models import Task, Worklog
 
 
 class HomeView(FormView):
@@ -31,9 +31,12 @@ class ReportView(View):
 
     def post(self, request, *args, **kwargs):
         form = ReportForm(request.POST, request.FILES)
-        start_date = datetime.date(int(form.data.get('start_date_year')), int(form.data.get('start_date_month')), int(form.data.get('start_date_day')))
-        end_date = datetime.date(int(form.data.get('end_date_year')), int(form.data.get('end_date_month')), int(form.data.get('end_date_day')))
-        worklog_data = Worklog.objects.filter(work_date__gte = start_date, work_date__lte = end_date)
+        start_date = datetime.date(int(form.data.get('start_date_year')), int(
+            form.data.get('start_date_month')), int(form.data.get('start_date_day')))
+        end_date = datetime.date(int(form.data.get('end_date_year')), int(
+            form.data.get('end_date_month')), int(form.data.get('end_date_day')))
+        worklog_data = Worklog.objects.filter(
+            work_date__gte=start_date, work_date__lte=end_date)
         context = {}
         context['worklog_data'] = worklog_data
         context['form'] = form
@@ -43,4 +46,3 @@ class ReportView(View):
 def export_excel(request):
     print("export excel")
     pass
- 
