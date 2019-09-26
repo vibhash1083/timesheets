@@ -37,10 +37,8 @@ class ReportView(View):
 
     def post(self, request, *args, **kwargs):
         form = ReportForm(request.POST, request.FILES)
-        start_date = datetime.date(int(form.data.get('start_date_year')), int(
-            form.data.get('start_date_month')), int(form.data.get('start_date_day')))
-        end_date = datetime.date(int(form.data.get('end_date_year')), int(
-            form.data.get('end_date_month')), int(form.data.get('end_date_day')))
+        start_date = datetime.datetime.strptime(form.data.get('start_date'), '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(form.data.get('end_date'), '%Y-%m-%d').date()
         worklog_data = Worklog.objects.filter(
             work_date__gte=start_date, work_date__lte=end_date)
         context = {}
