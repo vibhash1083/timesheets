@@ -26,17 +26,19 @@
                 </div>
                 {% endfor %}
                 <div class="row">
-                <div class="form-actions row justify-content-center col-md-5">
+                <div class="form-actions row justify-content-center col-md-3">
                     <input type="submit" class="btn btn-primary" title="Submit" value="submit" name="_submit">
                 </div>
-                <div class="form-actions row justify-content-center col-md-1">
+                <div class="form-actions row justify-content-center col-md-3">
                     <input type="submit" class="btn btn-primary" title="Download report" value="download" name="_download">
                 </div>
-                <div class="form-actions row justify-content-center col-md-4">
+                <div class="form-actions row justify-content-center col-md-3">
                     <input type="submit" class="btn btn-primary" title="Add" value="add" name="_add" src="/">
                 </div>
+
                 </div>
-            </form>
+                </form>
+
         </div>
 
         {% if worklog_data %}
@@ -56,6 +58,7 @@
                                 <th>Category</th>
                                 <th>Date</th>
                                 <th>Hours</th>
+                                <th colspan="2">Option</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -70,6 +73,10 @@
                                 <td>{{data.task.category.category_name}}</td>
                                 <td>{{data.work_date}}</td>
                                 <td>{{data.hours}}</td>
+                                <td><div class="form-actions row justify-content-center">
+                                    <a  class="btn btn-primary" title="Edit" value={{data.id}} name="_edit" href="{% url 'edit_view' worklog_id=data.id %}">Edit</a>
+                                </div></td>
+
                             </tr>
                             {% endfor %}
                         </tbody>

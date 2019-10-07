@@ -15,32 +15,46 @@ class WorklogForm(forms.Form):
     worked_date = forms.DateField(label='Date', widget=AdminDateWidget(), initial=datetime.date.today)
     hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
 
-    def save(self):
-        task_category = self.cleaned_data.get('task_category')
-        jira_ticket_type = self.cleaned_data.get('ticket_type')
-        jira_ticket_number = self.cleaned_data.get('ticket_number')
-        description = self.cleaned_data.get('ticket_description')
-        sprint = self.cleaned_data.get('sprint')
+    def save(self, id=None):
+        if id:
+            worklog = Worklog.objects.get(pk=id)
+            worklog.member.name = self.cleaned_data.get('member_name')
+            worklog.member.team_name = self.cleaned_data.get('team_name')
+            worklog.task.category.category_name = self.cleaned_data.get('task_category')
+            worklog.task.jira_ticket_type.ticket_type = self.cleaned_data.get('ticket_type')
+            worklog.task.jira_ticket_number = self.cleaned_data.get('ticket_number')
+            worklog.task.description = self.cleaned_data.get('ticket_description')
+            worklog.task.sprint = self.cleaned_data.get('sprint')
+            worklog.hours = self.cleaned_data.get('hours_worked')
+            worklog.work_date = self.cleaned_data.get('worked_date')
+            worklog.save()
 
-        task_entry = Task(category=task_category,
-                          jira_ticket_type=jira_ticket_type,
-                          jira_ticket_number=jira_ticket_number,
-                          description=description,
-                          sprint=sprint)
-        task_entry.save()
+        else:
+            task_category = self.cleaned_data.get('task_category')
+            jira_ticket_type = self.cleaned_data.get('ticket_type')
+            jira_ticket_number = self.cleaned_data.get('ticket_number')
+            description = self.cleaned_data.get('ticket_description')
+            sprint = self.cleaned_data.get('sprint')
+            task_entry = Task(category=task_category,
+                              jira_ticket_type=jira_ticket_type,
+                              jira_ticket_number=jira_ticket_number,
+                              description=description,
+                              sprint=sprint)
+            task_entry.save()
 
-        member = self.cleaned_data.get('member_name')
-        worked_date = self.cleaned_data.get('worked_date')
-        worked_hours = self.cleaned_data.get('hours_worked')
+            member = self.cleaned_data.get('member_name')
+            worked_date = self.cleaned_data.get('worked_date')
+            worked_hours = self.cleaned_data.get('hours_worked')
 
-        worklog_entry = Worklog(task=task_entry,
+            worklog_entry = Worklog(task=task_entry,
                                 member=member,
                                 work_date=worked_date,
                                 hours=worked_hours)
 
-        worklog_entry.save()
+            worklog_entry.save()
 
 
 class ReportForm(forms.Form):
     start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
     end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
+    team_member = forms.CharField(label='Member Name', required=False)

@@ -1,8 +1,7 @@
-import xlwt
+import xlsxwriter
 from math import ceil
 from .models import *
 
-# Function to genrate week number
 def get_current_week(date):
     first_day = date.replace(day=1)
     dom = date.day
@@ -10,79 +9,98 @@ def get_current_week(date):
 
     return int(ceil(adjusted_dom / 7.0))
 
-# Function to generate sheets with header in Excel
-def get_sheet(sheets, work_book):
-
+def add_sheets(sheets,workbook):
     for sheet in sheets:
-        write_sheet = work_book.add_sheet(sheet.group_name)
-        row_num = 0
+        worksheet = workbook.add_worksheet(sheet.group_name)
+        cell_format1 = workbook.add_format({'bold': True, 'font_name': 'Times New Roman'})
+        cell_format1.set_bg_color('yellow')
+        titles = [
+            'Jira Ticket Type',
+            'Jira Ticket Number',
+            'Description',
+            'Sprints/Releases',
+            'Team Member',
+            'Category',
+            'Hours',
+            'Week',
+        ]
+        row_number = 0
+        for column_number in range(len(titles)):
+            worksheet.write(row_number, column_number, titles[column_number], cell_format1)
 
-        # Adding style to header and other cells of excel
-        font_style1 = xlwt.Style.easyxf(
-            'font: name Calibri, bold on, height 180,color black; pattern: pattern solid, fore_colour yellow; border: top_color black, bottom_color black, right_color black, left_color black ;')
-
-        columns = ['Jira Ticket Type', 'Jira Ticket Number', 'Description', 'Sprints/Releases',
-                   'Team Member', 'Category', 'Hours', 'Week', ]
-        # Adding titles into the sheets
-        for col_num in range(len(columns)):
-            write_sheet.write(row_num, col_num, columns[col_num], font_style1)
-
-# Function to enter the data into excel
-def enter_data(sheets, from_date, to_date, work_book):
+def add_data(sheets, workbook, from_date, to_date, team_member):
+    cell_format2 = workbook.add_format({'font_name': 'Times New Roman'})
     for sheet in sheets:
-        write_sheet = work_book.get_sheet(sheet.group_name)
-        row_num = len(write_sheet._Worksheet__rows)
-        rows = Worklog.objects.filter(work_date__gte=from_date, work_date__lte=to_date,
-                                      member__group_name__group_name__contains=sheet.group_name)
-        font_style1 = xlwt.Style.easyxf(
-            'font: name Calibri, bold on, height 180,color black; pattern: pattern solid, fore_colour yellow; border: top_color black, bottom_color black, right_color black, left_color black ;')
-
-        font_style2 = xlwt.Style.easyxf(
-            'font: name Calibri, height 180; border: top_color black, bottom_color black, right_color black, left_color black;')
-
+        worksheet = workbook.get_worksheet_by_name(sheet.group_name)
+        row_number = 1
+        if team_member is None:
+            rows = Worklog.objects.filter(work_date__gte=from_date, work_date__lte=to_date,
+                                          member__group_name__group_name__contains=sheet.group_name)
+        else:
+            rows = Worklog.objects.filter(work_date__gte=from_date, work_date__lte=to_date,
+                                      member__group_name__group_name__contains=sheet.group_name, member__name__contains=team_member)
         for row in rows:
-            write_sheet.write(row_num, 0, row.task.jira_ticket_type.ticket_type, font_style2)
-            write_sheet.write(row_num, 1, row.task.jira_ticket_number, font_style2)
-            write_sheet.write(row_num, 2, row.task.description, font_style2)
-            write_sheet.write(row_num, 3, row.task.sprint, font_style2)
-            write_sheet.write(row_num, 4, row.member.name, font_style2)
-            write_sheet.write(row_num, 5, row.task.category.category_name, font_style2)
-            write_sheet.write(row_num, 6, row.hours, font_style2)
-            write_sheet.write(row_num, 7, "Week-" + get_current_week(row.work_date).__str__(), font_style2)
-            row_num += 1
-        write_sheet.write(1, 9, "Team Member", font_style1)
-        write_sheet.write(1, 10, "Sum of Hours", font_style1)
+            worksheet.write(row_number, 0, row.task.jira_ticket_type.ticket_type, cell_format2)
+            worksheet.write(row_number, 1, row.task.jira_ticket_number, cell_format2)
+            worksheet.write(row_number, 2, row.task.description, cell_format2)
+            worksheet.write(row_number, 3, row.task.sprint, cell_format2)
+            worksheet.write(row_number, 4, row.member.name, cell_format2)
+            worksheet.write(row_number, 5, row.task.category.category_name, cell_format2)
+            worksheet.write(row_number, 6, row.hours, cell_format2)
+            worksheet.write(row_number, 7, "Week-" + get_current_week(row.work_date).__str__(), cell_format2)
+            row_number += 1
 
-        member_names = Member.objects.filter(group_name__group_name__contains=sheet.group_name)
 
-        # Removing Duplications
-        mylist = []
+def add_statistics(sheets, workbook, from_date, to_date):
+    cell_format1 = workbook.add_format({'bold': True, 'font_name': 'Times New Roman'})
+    cell_format1.set_bg_color('yellow')
+    cell_format2 = workbook.add_format({'font_name': 'Times New Roman'})
+    for sheet in sheets:
+        worksheet = workbook.get_worksheet_by_name(sheet.group_name)
+        worksheet.write(1, 9, "Team Member", cell_format1)
+        worksheet.write(1, 10, "Sum of Hours", cell_format1)
+        member_names = Member.objects.filter(
+            group_name__group_name__contains=sheet.group_name)
+        names_list = []
+        hours_list = []
         for member_name in member_names:
-            if member_name.name not in mylist:
-                mylist.append(member_name.name)
-
-        # Individual Work hours of team members
+            if member_name.name not in names_list:
+                names_list.append(member_name.name)
         total_sum_of_hours = 0
-        number_of_members = len(mylist)
+        number_of_members = len(names_list)
         for i in range(number_of_members):
-            work_logs = Worklog.objects.filter(member__name__contains=mylist[i], work_date__gte=from_date,
-                                               work_date__lte=to_date)
-            write_sheet.write(i + 2, 9, mylist[i], font_style2)
+            work_logs = Worklog.objects.filter(
+                member__name__contains=names_list[i],
+                work_date__gte=from_date,
+                work_date__lte=to_date)
+            worksheet.write(i + 2, 9, names_list[i], cell_format2)
             sum_of_hours = 0
             for work_log in work_logs:
                 sum_of_hours += work_log.hours
-            write_sheet.write(i + 2, 10, sum_of_hours, font_style2)
+            hours_list.append(sum_of_hours)
+            worksheet.write(i + 2, 10, sum_of_hours, cell_format2)
             total_sum_of_hours += sum_of_hours
+        names_list.append("Total")
+        hours_list.append(total_sum_of_hours)
+        worksheet.write(number_of_members + 2, 9, "Total", cell_format1)
+        worksheet.write(number_of_members + 2, 10, total_sum_of_hours, cell_format1)
 
-        write_sheet.write(number_of_members + 2, 9, "Total", font_style1)
-        write_sheet.write(number_of_members + 2, 10, total_sum_of_hours, font_style1)
+        pie_chart = workbook.add_chart({'type': 'pie'})
+        pie_chart.set_title({'name': 'Statistics'})
+        pie_chart.set_style(10)
+        pie_chart.add_series({'categories':[sheet.group_name, 2, 9, 2+len(names_list)-1, 9],
+                              'values':[sheet.group_name, 2, 10, 2+len(names_list)-1, 10],
+                              'data_labels': {'value': False, 'percentage':True, 'category': False, 'position': 'outside_end'}
+                              })
+        worksheet.insert_chart('M2', pie_chart, {'x_offset': 25, 'y_offset': 10})
 
 
-def generate_excel_report(from_date, to_date):
-    work_book = xlwt.Workbook(encoding='utf-8')
+def generate_excel_report(from_date, to_date, team_member):
+    workbook = xlsxwriter.Workbook('Timesheets.xlsx')
     sheets = Group.objects.all()
-    get_sheet(sheets, work_book)
-    enter_data(sheets, from_date, to_date, work_book)
+    add_sheets(sheets, workbook)
+    add_data(sheets, workbook, from_date, to_date, team_member)
+    if team_member is not None:
+        add_statistics(sheets, workbook, from_date, to_date)
 
-    return work_book
-
+    workbook.close()
