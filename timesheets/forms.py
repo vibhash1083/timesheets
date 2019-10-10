@@ -12,7 +12,10 @@ class WorklogForm(forms.Form):
     ticket_number = forms.IntegerField()
     ticket_description = forms.CharField()
     sprint = forms.CharField(required=False)
-    worked_date = forms.DateField(label='Date', widget=AdminDateWidget(), initial=datetime.date.today)
+    worked_date = forms.DateField(
+        label='Date',
+        widget=AdminDateWidget(),
+        initial=datetime.date.today)
     hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
 
     def save(self, id=None):
@@ -20,10 +23,14 @@ class WorklogForm(forms.Form):
             worklog = Worklog.objects.get(pk=id)
             worklog.member.name = self.cleaned_data.get('member_name')
             worklog.member.team_name = self.cleaned_data.get('team_name')
-            worklog.task.category.category_name = self.cleaned_data.get('task_category')
-            worklog.task.jira_ticket_type.ticket_type = self.cleaned_data.get('ticket_type')
-            worklog.task.jira_ticket_number = self.cleaned_data.get('ticket_number')
-            worklog.task.description = self.cleaned_data.get('ticket_description')
+            worklog.task.category.category_name = self.cleaned_data.get(
+                'task_category')
+            worklog.task.jira_ticket_type.ticket_type = self.cleaned_data.get(
+                'ticket_type')
+            worklog.task.jira_ticket_number = self.cleaned_data.get(
+                'ticket_number')
+            worklog.task.description = self.cleaned_data.get(
+                'ticket_description')
             worklog.task.sprint = self.cleaned_data.get('sprint')
             worklog.hours = self.cleaned_data.get('hours_worked')
             worklog.work_date = self.cleaned_data.get('worked_date')
@@ -47,9 +54,9 @@ class WorklogForm(forms.Form):
             worked_hours = self.cleaned_data.get('hours_worked')
 
             worklog_entry = Worklog(task=task_entry,
-                                member=member,
-                                work_date=worked_date,
-                                hours=worked_hours)
+                                    member=member,
+                                    work_date=worked_date,
+                                    hours=worked_hours)
 
             worklog_entry.save()
 

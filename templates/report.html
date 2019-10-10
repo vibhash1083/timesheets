@@ -64,6 +64,7 @@
                         <tbody>
                             {% for data in worklog_data %}
                             <tr>
+                                {% if data.is_deleted == False %}
                                 <td>{{data.member.group_name.group_name}}</td>
                                 <td>{{data.task.jira_ticket_type}}</td>
                                 <td>{{data.task.jira_ticket_number}}</td>
@@ -76,7 +77,36 @@
                                 <td><div class="form-actions row justify-content-center">
                                     <a  class="btn btn-primary" title="Edit" value={{data.id}} name="_edit" href="{% url 'edit_view' worklog_id=data.id %}">Edit</a>
                                 </div></td>
+                                <td><div class="form-actions row justify-content-center">
+                                      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">Delete</button>
 
+                                     <div class="modal fade" id="myModal" role="dialog">
+                                        <div class="modal-dialog">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <p>Are you sure you want to delete the entry?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <a  class="btn btn-danger" href="{% url 'delete_view' worklog_id=data.id %}">Delete</a>
+                                                <button class="btn btn-primary" data-dismiss="modal">Close</button>
+                                            </div>
+                                          </div>
+
+                                        </div>
+                                      </div>
+
+                                    </div>
+                                </td>
+
+
+
+
+                                </td>
+
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -88,13 +118,18 @@
 
     </div>
 </div>
-{% endblock %} {% block js %}
+{% endblock %}
+
+{% block js %}
 <!-- BEGIN JS -->
 <!-- Page level plugins -->
+
 <script src="{% static " vendor/datatables/jquery.dataTables.min.js " %}"></script>
 <script src="{% static " vendor/datatables/dataTables.bootstrap4.min.js " %}"></script>
 
-<!-- Page level custom scripts -->
+
 <script src="{% static " js/demo/datatables-demo.js " %}"></script>
+
+
 <!-- END JS -->
 {% endblock %}

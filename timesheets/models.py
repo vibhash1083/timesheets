@@ -57,8 +57,13 @@ class Worklog(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     work_date = models.DateField(default=datetime.date.today)
     hours = models.IntegerField(default=0)
-    # is_delete = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False, verbose_name="Is Deleted")
+
+    def delete(self, *args, **kwargs):
+        if self.is_deleted:
+            return
+        self.is_deleted = True
+        self.save()
 
     def __str__(self):
-        # return self.work_date + ' ' + self.member_name
         return self.member.name

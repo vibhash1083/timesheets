@@ -1,6 +1,8 @@
-import xlsxwriter
 from math import ceil
 from .models import *
+
+# Defined to get the week number
+
 
 def get_current_week(date):
     first_day = date.replace(day=1)
@@ -9,10 +11,14 @@ def get_current_week(date):
 
     return int(ceil(adjusted_dom / 7.0))
 
-def add_sheets(sheets,workbook):
+# Defined to create sheets in workbook
+
+
+def add_sheets(sheets, workbook):
     for sheet in sheets:
         worksheet = workbook.add_worksheet(sheet.group_name)
-        cell_format1 = workbook.add_format({'bold': True, 'font_name': 'Times New Roman'})
+        cell_format1 = workbook.add_format(
+            {'bold': True, 'font_name': 'Times New Roman'})
         cell_format1.set_bg_color('yellow')
         titles = [
             'Jira Ticket Type',
@@ -26,7 +32,14 @@ def add_sheets(sheets,workbook):
         ]
         row_number = 0
         for column_number in range(len(titles)):
-            worksheet.write(row_number, column_number, titles[column_number], cell_format1)
+            worksheet.write(
+                row_number,
+                column_number,
+                titles[column_number],
+                cell_format1)
+
+# Defined to add data into the sheets
+
 
 def add_data(sheets, workbook, from_date, to_date, team_member):
     cell_format2 = workbook.add_format({'font_name': 'Times New Roman'})
@@ -34,25 +47,53 @@ def add_data(sheets, workbook, from_date, to_date, team_member):
         worksheet = workbook.get_worksheet_by_name(sheet.group_name)
         row_number = 1
         if team_member is None:
-            rows = Worklog.objects.filter(work_date__gte=from_date, work_date__lte=to_date,
-                                          member__group_name__group_name__contains=sheet.group_name)
+            rows = Worklog.objects.filter(
+                work_date__gte=from_date,
+                work_date__lte=to_date,
+                member__group_name__group_name__contains=sheet.group_name,
+                is_deleted=False)
         else:
-            rows = Worklog.objects.filter(work_date__gte=from_date, work_date__lte=to_date,
-                                      member__group_name__group_name__contains=sheet.group_name, member__name__contains=team_member)
+            rows = Worklog.objects.filter(
+                work_date__gte=from_date,
+                work_date__lte=to_date,
+                member__group_name__group_name__contains=sheet.group_name,
+                member__name__contains=team_member,
+                is_deleted=False)
         for row in rows:
-            worksheet.write(row_number, 0, row.task.jira_ticket_type.ticket_type, cell_format2)
-            worksheet.write(row_number, 1, row.task.jira_ticket_number, cell_format2)
+            worksheet.write(
+                row_number,
+                0,
+                row.task.jira_ticket_type.ticket_type,
+                cell_format2)
+            worksheet.write(
+                row_number,
+                1,
+                row.task.jira_ticket_number,
+                cell_format2)
             worksheet.write(row_number, 2, row.task.description, cell_format2)
             worksheet.write(row_number, 3, row.task.sprint, cell_format2)
             worksheet.write(row_number, 4, row.member.name, cell_format2)
-            worksheet.write(row_number, 5, row.task.category.category_name, cell_format2)
+            worksheet.write(
+                row_number,
+                5,
+                row.task.category.category_name,
+                cell_format2)
             worksheet.write(row_number, 6, row.hours, cell_format2)
-            worksheet.write(row_number, 7, "Week-" + get_current_week(row.work_date).__str__(), cell_format2)
+            worksheet.write(
+                row_number,
+                7,
+                "Week-" +
+                get_current_week(
+                    row.work_date).__str__(),
+                cell_format2)
             row_number += 1
+
+# Defined to add pie chart to the sheets
 
 
 def add_statistics(sheets, workbook, from_date, to_date):
-    cell_format1 = workbook.add_format({'bold': True, 'font_name': 'Times New Roman'})
+    cell_format1 = workbook.add_format(
+        {'bold': True, 'font_name': 'Times New Roman'})
     cell_format1.set_bg_color('yellow')
     cell_format2 = workbook.add_format({'font_name': 'Times New Roman'})
     for sheet in sheets:
@@ -72,7 +113,7 @@ def add_statistics(sheets, workbook, from_date, to_date):
             work_logs = Worklog.objects.filter(
                 member__name__contains=names_list[i],
                 work_date__gte=from_date,
-                work_date__lte=to_date)
+                work_date__lte=to_date, is_deleted=False)
             worksheet.write(i + 2, 9, names_list[i], cell_format2)
             sum_of_hours = 0
             for work_log in work_logs:
@@ -83,24 +124,46 @@ def add_statistics(sheets, workbook, from_date, to_date):
         names_list.append("Total")
         hours_list.append(total_sum_of_hours)
         worksheet.write(number_of_members + 2, 9, "Total", cell_format1)
-        worksheet.write(number_of_members + 2, 10, total_sum_of_hours, cell_format1)
+        worksheet.write(
+            number_of_members + 2,
+            10,
+            total_sum_of_hours,
+            cell_format1)
 
         pie_chart = workbook.add_chart({'type': 'pie'})
         pie_chart.set_title({'name': 'Statistics'})
         pie_chart.set_style(10)
-        pie_chart.add_series({'categories':[sheet.group_name, 2, 9, 2+len(names_list)-1, 9],
-                              'values':[sheet.group_name, 2, 10, 2+len(names_list)-1, 10],
-                              'data_labels': {'value': False, 'percentage':True, 'category': False, 'position': 'outside_end'}
-                              })
-        worksheet.insert_chart('M2', pie_chart, {'x_offset': 25, 'y_offset': 10})
+        pie_chart.add_series(
+            {
+                'categories': [
+                    sheet.group_name,
+                    2,
+                    9,
+                    2 + len(names_list) - 1,
+                    9],
+                'values': [
+                    sheet.group_name,
+                    2,
+                    10,
+                    2 + len(names_list) - 1,
+                    10],
+                'data_labels': {
+                    'value': False,
+                    'percentage': True,
+                    'category': False,
+                    'position': 'outside_end'}})
+        worksheet.insert_chart(
+            'M2', pie_chart, {
+                'x_offset': 25, 'y_offset': 10})
+
+# Starting point (main method)
 
 
-def generate_excel_report(from_date, to_date, team_member):
-    workbook = xlsxwriter.Workbook('Timesheets.xlsx')
+def generate_excel_report(workbook, from_date, to_date, team_member):
     sheets = Group.objects.all()
     add_sheets(sheets, workbook)
     add_data(sheets, workbook, from_date, to_date, team_member)
     if team_member is not None:
         add_statistics(sheets, workbook, from_date, to_date)
 
-    workbook.close()
+    return workbook

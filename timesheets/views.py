@@ -1,11 +1,12 @@
 import datetime
-
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.generic.edit import FormView, View, UpdateView
+import xlsxwriter
+from io import BytesIO
+from django.http import StreamingHttpResponse
+from django.shortcuts import render, HttpResponseRedirect, redirect
+from django.views.generic.edit import FormView, View
 from django.urls import reverse_lazy
 from .forms import WorklogForm, ReportForm
-from .models import  Worklog
+from .models import Worklog
 from .export_excel import generate_excel_report
 
 
@@ -45,8 +46,16 @@ class EditView(FormView):
     def form_valid(self, form):
         worklog_id = self.kwargs.get('worklog_id')
         form.save(int(worklog_id))
-        # form.edit(int(pk))
         return super(EditView, self).form_valid(form)
+
+
+class DeleteView(View):
+
+    def get(self, request, worklog_id):
+        worklog = Worklog.objects.get(pk=int(worklog_id))
+        worklog.is_deleted = True
+        worklog.save()
+        return HttpResponseRedirect('/view_report')
 
 
 class ReportView(View):
@@ -67,25 +76,37 @@ class ReportView(View):
 
     def post(self, request, *args, **kwargs):
         form = ReportForm(request.POST, request.FILES)
-        start_date = datetime.datetime.strptime(form.data.get('start_date'), '%Y-%m-%d').date()
-        end_date = datetime.datetime.strptime(form.data.get('end_date'), '%Y-%m-%d').date()
+        start_date = datetime.datetime.strptime(
+            form.data.get('start_date'), '%Y-%m-%d').date()
+        end_date = datetime.datetime.strptime(
+            form.data.get('end_date'), '%Y-%m-%d').date()
         team_member = form.data.get('team_member')
         if request.POST:
             if '_submit' in request.POST:
                 if team_member is None:
-                    worklog_data = Worklog.objects.filter(work_date__gte=start_date, work_date__lte=end_date)
+                    worklog_data = Worklog.objects.filter(
+                        work_date__gte=start_date, work_date__lte=end_date)
                 else:
-                    worklog_data = Worklog.objects.filter(member__name__contains=team_member, work_date__gte=start_date, work_date__lte=end_date)
+                    worklog_data = Worklog.objects.filter(
+                        member__name__contains=team_member,
+                        work_date__gte=start_date,
+                        work_date__lte=end_date)
                 context = {}
                 context['worklog_data'] = worklog_data
                 context['form'] = form
                 return render(request, 'report.html', context)
             elif '_download' in request.POST:
-                response = HttpResponse(content_type='application/ms-excel')
-                response['Content-Disposition'] = 'attachment; filename="TimeSheet.xls"'
-                generate_excel_report(start_date, end_date, team_member)
+                output = BytesIO()
+                workbook = xlsxwriter.Workbook(output)
+                workbook = generate_excel_report(
+                    workbook, start_date, end_date, team_member)
+                workbook.close()
+                output.seek(0)
+                response = StreamingHttpResponse(
+                    output,
+                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                response['Content-Disposition'] = 'attachment; filename=Timesheets.xlsx'
                 return response
             elif '_add' in request.POST:
                 response = redirect('/')
                 return response
-

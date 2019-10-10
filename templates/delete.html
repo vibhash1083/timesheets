@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+<div id="content" class="colM">
+
+        <h1>Are you sure?</h1>
+
+
+    <p>Are you sure you want to delete the selected entry?</p>
+
+    <form method="post" action=" "><input type="hidden">
+    <div>
+
+    <input type="hidden" name="_selected_action" value="2">
+
+    <input type="hidden" name="action" value="delete_selected">
+    <input type="hidden" name="post" value="yes"><br><br>
+    <input type="submit" class="btn btn-danger" value="Yes" name="_yes">
+    <a href="{% url 'report_view' %}" class="btn btn-primary" >Back</a>
+    </div>
+    </form>
+
+
+
+        <br class="clear">
+    </div>
+{% endblock %}
