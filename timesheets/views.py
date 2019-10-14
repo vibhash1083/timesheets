@@ -6,7 +6,7 @@ from django.shortcuts import render, HttpResponseRedirect, redirect, HttpRespons
 from django.views.generic.edit import FormView, View
 from django.urls import reverse_lazy
 from .forms import WorklogForm, ReportForm, FeedbackForm
-from .models import Worklog
+from .models import Worklog, Feedback
 from .export_excel import generate_excel_report
 from django.contrib import messages
 
@@ -22,35 +22,54 @@ class HomeView(FormView):
 
 class FeedbackView(View):
     template_name = 'feedback.html'
-    # success_url = reverse_lazy('submit_view')
+    # success_url = reverse_lazy('feedback_list_view')
     
     def get(self, request, *args, **kwargs): #None means id is not required
         #GET Method
+        
         form = FeedbackForm()
         context = {"form": form}
         return render(request, self.template_name, context)
+
     def post(self, request, *args, **kwargs): #None means id is not required
         #POST Method
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
-            # form = FeedbackForm()
+            form = FeedbackForm()
             messages.success(request, 'Form submission successful')
             # return HttpResponse('Thanks for feedback')
+            return HttpResponseRedirect('/feedback/list')
         context = {"form": form}
         return render(request, self.template_name, context)
 
-# class SubmitView(View):
 
-#     def get(self, request, *args, **kwargs):
-#         return HttpResponse('Hello, World!')
-# class SubmitView(FormView):
-#     template_name = 'thanks.html'
+class FeedbackListView(View):
+    template_name = 'feedback_list.html'
+    queryset = Feedback.objects.all()
+    
+    def get_queryset(self):
+        self.queryset = Feedback.objects.all()
+        return self.queryset
+    
+    def get(self, request, *args, **kwargs):
+        context = {'object_list': self.get_queryset()}
+        print("In view of list")
+        return render(request, self.template_name, context)
 
-#     def get(self, request, *args, **kwargs): 
-#         # form = FeedbackForm()
-#         # context = {"form": form}
-#         return render(request, self.template_name, {})
+    def post(self, request, *args, **kwargs):
+        context = {'object_list': self.get_queryset()}
+        print("In view of list")
+        return render(request, self.template_name, context)
+
+
+class SubmitView(View):
+    template_name = 'thanks.html'
+
+    def get(self, request, *args, **kwargs): 
+        # form = FeedbackForm()
+        # context = {"form": form}
+        return render(request, self.template_name, {})
 
 
 

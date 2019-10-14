@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
-from django.forms import ModelForm, Textarea
+from django.forms import Textarea
 
 from .models import *
 
@@ -18,6 +18,11 @@ class WorklogForm(forms.Form):
         widget=AdminDateWidget(),
         initial=datetime.date.today)
     hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
+
+    def __init__(self, **kwargs):
+        self.team_name = kwargs.pop('team_name', None)
+        # self.author = kwargs.pop('author', None)
+        super(WorklogForm, self).__init__(**kwargs)
 
     def save(self, id=None):
         if id:
@@ -68,11 +73,13 @@ class ReportForm(forms.Form):
     team_member = forms.CharField(label='Member Name', required=False)
 
 class FeedbackForm(forms.ModelForm):
+    
     class Meta:
         model = Feedback
         fields = [
             'name',
-            'feedback'
+            'feedback',
+            'status'
         ]
         widgets = {
             'feedback': Textarea(attrs={'cols': 40, 'rows': 10}),

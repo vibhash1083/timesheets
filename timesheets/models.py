@@ -69,8 +69,16 @@ class Worklog(models.Model):
         return self.member.name
 
 class Feedback(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.ForeignKey(Member, on_delete=models.CASCADE)
     feedback = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    status_choices = [
+        ("WorkInProgress", "Work In Progress"),
+        ("WouldNotBeDone", "Would Not Be Done"),
+        ("ToBeDone", "To Be Done")
+    ]
+    status = models.CharField(max_length=20, choices=status_choices, default=' ', null=True, blank=True)
+    
 
     def __str__(self):
-        return self.name
+        return self.name.name
