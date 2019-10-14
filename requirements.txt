@@ -3,3 +3,5 @@ Django==2.2.5
 XlsxWriter==1.2.1
 python-dateutil==2.8.0
 django-widget-tweaks==1.4.5
+django-bootstrap4
+django-bootstrap-datepicker-plus==3.0.5

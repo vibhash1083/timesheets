@@ -21,8 +21,7 @@ def add_sheets(sheets, workbook):
             {'bold': True, 'font_name': 'Times New Roman'})
         cell_format1.set_bg_color('yellow')
         titles = [
-            'Jira Ticket Type',
-            'Jira Ticket Number',
+            'Jira Ticket',
             'Description',
             'Sprints/Releases',
             'Team Member',
@@ -60,15 +59,11 @@ def add_data(sheets, workbook, from_date, to_date, team_member):
                 member__name__contains=team_member,
                 is_deleted=False)
         for row in rows:
+            ticket = row.task.jira_ticket_type.ticket_type+' '+str(row.task.jira_ticket_number)
             worksheet.write(
                 row_number,
                 0,
-                row.task.jira_ticket_type.ticket_type,
-                cell_format2)
-            worksheet.write(
-                row_number,
-                1,
-                row.task.jira_ticket_number,
+                ticket,
                 cell_format2)
             worksheet.write(row_number, 2, row.task.description, cell_format2)
             worksheet.write(row_number, 3, row.task.sprint, cell_format2)

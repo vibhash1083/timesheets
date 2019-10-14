@@ -43,7 +43,7 @@ class TicketType(models.Model):
 class Task(models.Model):
     category = models.ForeignKey(TaskCategory, on_delete=models.CASCADE)
     jira_ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
-    jira_ticket_number = models.IntegerField(null=True, blank=True)
+    jira_ticket_number = models.CharField(max_length=20,default=' ')
     description = models.CharField(max_length=100)
     sprint = models.CharField(max_length=20, null=True, blank=True)
 
