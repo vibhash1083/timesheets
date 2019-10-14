@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import  Textarea
+from django.forms import Textarea
 from .models import *
 
 class DateInput(forms.DateInput):
@@ -68,11 +68,13 @@ class ReportForm(forms.Form):
     team_member = forms.ModelChoiceField(label='Member Name', required=False, queryset=Member.objects.all())
 
 class FeedbackForm(forms.ModelForm):
+    
     class Meta:
         model = Feedback
         fields = [
             'name',
-            'feedback'
+            'feedback',
+            'status'
         ]
         widgets = {
             'feedback': Textarea(attrs={'cols': 40, 'rows': 10}),
