@@ -35,7 +35,7 @@ class FeedbackView(View):
         if form.is_valid():
             form.save()
             form = FeedbackForm()
-            messages.success(request, 'Form submission successful')
+            # messages.success(request, 'Form submission successful')
             return HttpResponseRedirect('/feedback/list')
         context = {"form": form}
         return render(request, self.template_name, context)
@@ -46,7 +46,7 @@ class FeedbackListView(View):
     queryset = Feedback.objects.all().order_by('-submitted_at')
     
     def get_queryset(self):
-        self.queryset = Feedback.objects.all()
+        self.queryset = Feedback.objects.all().order_by('-submitted_at')
         return self.queryset
     
     def get(self, request, *args, **kwargs):
