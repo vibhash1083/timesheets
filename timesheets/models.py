@@ -77,8 +77,7 @@ class Feedback(models.Model):
         ("WouldNotBeDone", "Would Not Be Done"),
         ("ToBeDone", "To Be Done")
     ]
-    status = models.CharField(max_length=20, choices=status_choices, default=' ', null=True, blank=True)
-    
+    status = models.CharField(max_length=20, choices=status_choices, default=' ', null=True, blank=True) 
 
     def __str__(self):
         return self.name.name
