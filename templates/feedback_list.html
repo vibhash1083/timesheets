@@ -27,8 +27,13 @@
                             <tr>
                                 <td>{{data.name}}</td>
                                 <td>{{data.feedback}}</td>
+                                {% if data.status == 'blank' %}
+                                <td>  </td>
+                                {% else %}
                                 <td>{{data.status}}</td>
+                                {% endif %}
                                 <td>{{data.submitted_at}}</td>
+
                                                                                                 
                             </tr>
                             {% endfor %}

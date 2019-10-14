@@ -43,7 +43,7 @@ class FeedbackView(View):
 
 class FeedbackListView(View):
     template_name = 'feedback_list.html'
-    queryset = Feedback.objects.all()
+    queryset = Feedback.objects.all().order_by('-submitted_at')
     
     def get_queryset(self):
         self.queryset = Feedback.objects.all()
