@@ -25,7 +25,7 @@ SECRET_KEY = '1vb)&(mbi$vty+11#+)%ye850241&tzjld+)%o3a(-98sgstk%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,9 @@ INSTALLED_APPS = [
 
     # third party apps
     'widget_tweaks',
+    'bootstrap_datepicker_plus',
+    'bootstrap4',
+    # 'jquery',
 
     # custom apps
     'timesheets',
@@ -73,6 +76,10 @@ TEMPLATES = [
     },
 ]
 
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 
 WSGI_APPLICATION = 'core.wsgi.application'

@@ -1,28 +1,23 @@
 from django import forms
-from django.contrib.admin.widgets import AdminDateWidget
 from django.forms import Textarea
-
 from .models import *
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class WorklogForm(forms.Form):
     member_name = forms.ModelChoiceField(queryset=Member.objects.all())
     team_name = forms.ModelChoiceField(queryset=Team.objects.all())
     task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all())
-    ticket_type = forms.ModelChoiceField(queryset=TicketType.objects.all())
-    ticket_number = forms.IntegerField()
+    ticket_type = forms.ModelChoiceField(queryset=TicketType.objects.all(), initial="ENG")
+    ticket_number = forms.IntegerField(required=False)
     ticket_description = forms.CharField()
-    sprint = forms.CharField(required=False)
+    sprint = forms.CharField(label='Release Version', required=False)
     worked_date = forms.DateField(
         label='Date',
-        widget=AdminDateWidget(),
+        widget = DateInput,
         initial=datetime.date.today)
     hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
-
-    def __init__(self, **kwargs):
-        self.team_name = kwargs.pop('team_name', None)
-        # self.author = kwargs.pop('author', None)
-        super(WorklogForm, self).__init__(**kwargs)
 
     def save(self, id=None):
         if id:
@@ -68,9 +63,9 @@ class WorklogForm(forms.Form):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
-    end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
-    team_member = forms.CharField(label='Member Name', required=False)
+    start_date = forms.DateField(label='Start Date', widget=DateInput)
+    end_date = forms.DateField(label='End Date', widget=DateInput)
+    team_member = forms.ModelChoiceField(label='Member Name', required=False, queryset=Member.objects.all())
 
 class FeedbackForm(forms.ModelForm):
     
@@ -84,7 +79,4 @@ class FeedbackForm(forms.ModelForm):
         widgets = {
             'feedback': Textarea(attrs={'cols': 40, 'rows': 10}),
         }
-# class FeedbackForm(forms.Form):
-#     name = forms.CharField(max_length=100)
-#     feedback = forms.CharField(widget=forms.Textarea)
 
