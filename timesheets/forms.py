@@ -1,13 +1,9 @@
 from django import forms
-from bootstrap_datepicker_plus import DatePickerInput
-
-from django.contrib.admin.widgets import AdminDateWidget
 from django.forms import  Textarea
-
-# from .widgets import BootstrapDateTimePickerInput
-
 from .models import *
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
 
 class WorklogForm(forms.Form):
     member_name = forms.ModelChoiceField(queryset=Member.objects.all())
@@ -19,10 +15,7 @@ class WorklogForm(forms.Form):
     sprint = forms.CharField(label='Release Version', required=False)
     worked_date = forms.DateField(
         label='Date',
-        widget=DatePickerInput(options={
-                    "format": "mm/dd/yyyy",
-                    "autoclose": True
-                }),
+        widget = DateInput,
         initial=datetime.date.today)
     hours_worked = forms.IntegerField(label='Hours Worked', initial=8)
 
@@ -70,8 +63,8 @@ class WorklogForm(forms.Form):
 
 
 class ReportForm(forms.Form):
-    start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
-    end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
+    start_date = forms.DateField(label='Start Date', widget=DateInput)
+    end_date = forms.DateField(label='End Date', widget=DateInput)
     team_member = forms.ModelChoiceField(label='Member Name', required=False, queryset=Member.objects.all())
 
 class FeedbackForm(forms.ModelForm):

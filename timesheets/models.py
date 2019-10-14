@@ -69,8 +69,8 @@ class Worklog(models.Model):
         return self.member.name
 
 class Feedback(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
     feedback = models.TextField()
 
     def __str__(self):
-        return self.name
+        return self.name.name

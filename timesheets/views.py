@@ -1,14 +1,13 @@
 import datetime
 import xlsxwriter
 from io import BytesIO
-from django.http import StreamingHttpResponse, HttpResponseRedirect
-from django.shortcuts import render, HttpResponseRedirect, redirect, HttpResponse
+from django.http import StreamingHttpResponse
+from django.shortcuts import render, HttpResponseRedirect, redirect
 from django.views.generic.edit import FormView, View
 from django.urls import reverse_lazy
 from .forms import WorklogForm, ReportForm, FeedbackForm
 from .models import Worklog
 from .export_excel import generate_excel_report
-from django.contrib import messages
 
 
 class HomeView(FormView):
@@ -22,40 +21,18 @@ class HomeView(FormView):
 
 class FeedbackView(View):
     template_name = 'feedback.html'
-    # success_url = reverse_lazy('submit_view')
-    
-    def get(self, request, *args, **kwargs): #None means id is not required
-        #GET Method
+
+    def get(self, request, *args, **kwargs):
         form = FeedbackForm()
         context = {"form": form}
         return render(request, self.template_name, context)
-    def post(self, request, *args, **kwargs): #None means id is not required
-        #POST Method
+
+    def post(self, request, *args, **kwargs):
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
-            # form = FeedbackForm()
-            messages.success(request, 'Form submission successful')
-            # return HttpResponse('Thanks for feedback')
         context = {"form": form}
         return render(request, self.template_name, context)
-
-
-# class SubmitView(FormView):
-#     template_name = 'thanks.html'
-#
-#     def get(self, request, *args, **kwargs):
-#         return render(request, self.template_name, {})
-#     def get(self, request, *args, **kwargs):
-#         return HttpResponse('Hello, World!')
-# class SubmitView(FormView):
-#     template_name = 'thanks.html'
-
-#     def get(self, request, *args, **kwargs): 
-#         # form = FeedbackForm()
-#         # context = {"form": form}
-#         return render(request, self.template_name, {})
-
 
 
 class EditView(FormView):

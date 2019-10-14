@@ -11,7 +11,6 @@ urlpatterns = [
     path('edit/<worklog_id>/', views.EditView.as_view(), name='edit_view'),
     path('delete/<worklog_id>', views.DeleteView.as_view(), name='delete_view'),
     path('feedback/', views.FeedbackView.as_view(), name="feedback_view"),
-    # path('thanks/', views.SubmitView.as_view(), name="submit_view"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
