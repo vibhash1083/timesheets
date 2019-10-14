@@ -2,6 +2,13 @@
 {% load widget_tweaks %}
 {% block content %}
 <!-- Page Heading -->
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 <div class="d-sm-8 align-items-center justify-content-between mb-4">
    <div class="card shadow mb-4">
@@ -44,12 +51,5 @@
    </div>
 </div>
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
-    {% endfor %}
-</ul>
-{% endif %}
 
 {% endblock %}
