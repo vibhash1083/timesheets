@@ -44,13 +44,13 @@ class FeedbackView(View):
 
 #     def get(self, request, *args, **kwargs):
 #         return HttpResponse('Hello, World!')
-class SubmitView(FormView):
-    template_name = 'thanks.html'
+# class SubmitView(FormView):
+#     template_name = 'thanks.html'
 
-    def get(self, request, *args, **kwargs): 
-        # form = FeedbackForm()
-        # context = {"form": form}
-        return render(request, self.template_name, {})
+#     def get(self, request, *args, **kwargs): 
+#         # form = FeedbackForm()
+#         # context = {"form": form}
+#         return render(request, self.template_name, {})
 
 
 
