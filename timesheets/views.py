@@ -35,7 +35,7 @@ class FeedbackView(View):
         if form.is_valid():
             form.save()
             form = FeedbackForm()
-            messages.success(request, 'Form submission successful')
+            # messages.success(request, 'Form submission successful')
             return HttpResponseRedirect('/feedback/list')
         context = {"form": form}
         return render(request, self.template_name, context)
