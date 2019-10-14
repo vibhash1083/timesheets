@@ -2,6 +2,7 @@ from django import forms
 from bootstrap_datepicker_plus import DatePickerInput
 
 from django.contrib.admin.widgets import AdminDateWidget
+from django.forms import  Textarea
 
 # from .widgets import BootstrapDateTimePickerInput
 
@@ -72,3 +73,15 @@ class ReportForm(forms.Form):
     start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
     end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
     team_member = forms.ModelChoiceField(label='Member Name', required=False, queryset=Member.objects.all())
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = [
+            'name',
+            'feedback'
+        ]
+        widgets = {
+            'feedback': Textarea(attrs={'cols': 40, 'rows': 10}),
+        }
+
