@@ -73,12 +73,12 @@ class Feedback(models.Model):
     feedback = models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
     status_choices = [
-        ("blank", " "),
-        ("WorkInProgress", "Work In Progress"),
-        ("WouldNotBeDone", "Would Not Be Done"),
-        ("ToBeDone", "To Be Done")
+        ("Submitted", "Submitted"),
+        ("Work In Progress", "Work In Progress"),
+        ("Would Not Be Done", "Would Not Be Done"),
+        ("To Be Done", "To Be Done")
     ]
-    status = models.CharField(max_length=20, choices=status_choices, default='blank', null=True, blank=True) 
+    status = models.CharField(max_length=20, choices=status_choices, default='Submitted')
 
     def __str__(self):
         return self.name.name

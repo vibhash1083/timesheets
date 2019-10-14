@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 from .forms import WorklogForm, ReportForm, FeedbackForm
 from .models import Worklog, Feedback
 from .export_excel import generate_excel_report
-from django.contrib import messages
 
 
 class HomeView(FormView):
@@ -35,7 +34,6 @@ class FeedbackView(View):
         if form.is_valid():
             form.save()
             form = FeedbackForm()
-            # messages.success(request, 'Form submission successful')
             return HttpResponseRedirect('/feedback/list')
         context = {"form": form}
         return render(request, self.template_name, context)
@@ -58,13 +56,6 @@ class FeedbackListView(View):
         context = {'object_list': self.get_queryset()}
         print("In view of list")
         return render(request, self.template_name, context)
-
-
-class SubmitView(View):
-    template_name = 'thanks.html'
-
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name, {})
 
 
 class EditView(FormView):

@@ -10,7 +10,7 @@ class WorklogForm(forms.Form):
     team_name = forms.ModelChoiceField(queryset=Team.objects.all())
     task_category = forms.ModelChoiceField(queryset=TaskCategory.objects.all())
     ticket_type = forms.ModelChoiceField(queryset=TicketType.objects.all(), initial="ENG")
-    ticket_number = forms.IntegerField(required=False)
+    ticket_number = forms.CharField(required=False)
     ticket_description = forms.CharField()
     sprint = forms.CharField(label='Release Version', required=False)
     worked_date = forms.DateField(
