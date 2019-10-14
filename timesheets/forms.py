@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
+from django.forms import ModelForm, Textarea
 
 from .models import *
 
@@ -65,3 +66,18 @@ class ReportForm(forms.Form):
     start_date = forms.DateField(label='Start Date', widget=AdminDateWidget())
     end_date = forms.DateField(label='End Date', widget=AdminDateWidget())
     team_member = forms.CharField(label='Member Name', required=False)
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = [
+            'name',
+            'feedback'
+        ]
+        widgets = {
+            'feedback': Textarea(attrs={'cols': 40, 'rows': 10}),
+        }
+# class FeedbackForm(forms.Form):
+#     name = forms.CharField(max_length=100)
+#     feedback = forms.CharField(widget=forms.Textarea)
+
