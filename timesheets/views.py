@@ -121,14 +121,14 @@ class ReportView(View):
         team_member = form.data.get('team_member')
         if request.POST:
             if '_submit' in request.POST:
-                if team_member is None:
+                if team_member:
                     worklog_data = Worklog.objects.filter(
-                        work_date__gte=start_date, work_date__lte=end_date)
-                else:
-                    worklog_data = Worklog.objects.filter(
-                        member__name__contains=team_member,
+                        member_id__in=team_member,
                         work_date__gte=start_date,
                         work_date__lte=end_date)
+                else:
+                    worklog_data = Worklog.objects.filter(
+                        work_date__gte=start_date, work_date__lte=end_date)
                 context = {}
                 context['worklog_data'] = worklog_data
                 context['form'] = form
